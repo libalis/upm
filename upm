@@ -6,20 +6,34 @@ try:
 	open(expanduser('~') + '/.config/upm', 'r+')
 except:
 	open(expanduser('~') + '/.config/upm', 'a')
-with open(expanduser('~') + '/.config/upm', 'r+') as file:
-	if file.readline() != '0.0.1\n':
-		file.truncate(0)
-		file.write('0.0.1\n')
-		file.write(input('flatpak_enabled=(0/1): ') + '\n')
-		file.write(input('snapd_enabled=(0/1): ') + '\n')
-		file.write(input('hold_enabled=(0/1): ') + '\n')
-	else:
-		pass
-	file.seek(0)
-	version = file.readline().splitlines()[0]
-	flatpak_enabled = file.readline()
-	snapd_enabled = file.readline()
-	hold_enabled = file.readline()
+while 1:
+	with open(expanduser('~') + '/.config/upm', 'r+') as file:
+		if file.readline() != '0.0.1\n':
+			file.truncate(0)
+			file.write('0.0.1\n')
+			tmp = input('flatpak_enabled=(0/1): ')
+			while tmp != '0' and tmp != '1':
+				tmp = input('flatpak_enabled=(0/1): ')
+			file.write(tmp + '\n')
+			tmp = input('snapd_enabled=(0/1): ')
+			while tmp != '0' and tmp != '1':
+				tmp = input('snapd_enabled=(0/1): ')
+			file.write(tmp + '\n')
+			tmp = input('hold_enabled=(0/1): ')
+			while tmp != '0' and tmp != '1':
+				tmp = input('hold_enabled=(0/1): ')
+			file.write(tmp + '\n')
+		else:
+			pass
+		file.seek(0)
+		version = file.readline().splitlines()[0]
+		try:
+			flatpak_enabled = int(file.readline())
+			snapd_enabled = int(file.readline())
+			hold_enabled = int(file.readline())
+			break
+		except:
+			file.truncate(0)
 def help():
 	print(popen('echo $SHELL').read().splitlines()[0].split('/')[-1] + ':')
 	print('\t--copyright\t-c')
