@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
+from os import popen, remove, system
 from os.path import expanduser
-from os import popen, system
 from sys import argv
 ### vars
 version = '0.0.2'
@@ -12,31 +12,34 @@ except:
 while 1:
 	with open(expanduser('~') + '/.config/upm', 'r+') as file:
 		if file.readline() != version + '\n':
-			file.truncate(0)
-			file.write(version + '\n')
-			tmp = input('flatpak_enabled=(0/1): ')
-			while tmp != '0' and tmp != '1':
+			remove(expanduser('~') + '/.config/upm')
+			open(expanduser('~') + '/.config/upm', 'a')
+			with open(expanduser('~') + '/.config/upm', 'r+') as file:
+				file.write(version + '\n')
 				tmp = input('flatpak_enabled=(0/1): ')
-			file.write(tmp + '\n')
-			tmp = input('snapd_enabled=(0/1): ')
-			while tmp != '0' and tmp != '1':
+				while tmp != '0' and tmp != '1':
+					tmp = input('flatpak_enabled=(0/1): ')
+				file.write(tmp + '\n')
 				tmp = input('snapd_enabled=(0/1): ')
-			file.write(tmp + '\n')
-			tmp = input('hold_enabled=(0/1): ')
-			while tmp != '0' and tmp != '1':
+				while tmp != '0' and tmp != '1':
+					tmp = input('snapd_enabled=(0/1): ')
+				file.write(tmp + '\n')
 				tmp = input('hold_enabled=(0/1): ')
-			file.write(tmp + '\n')
+				while tmp != '0' and tmp != '1':
+					tmp = input('hold_enabled=(0/1): ')
+				file.write(tmp + '\n')
 		else:
 			pass
-		file.seek(0)
-		version = file.readline().splitlines()[0]
-		try:
-			flatpak_enabled = int(file.readline())
-			snapd_enabled = int(file.readline())
-			hold_enabled = int(file.readline())
-			break
-		except:
-			file.truncate(0)
+		with open(expanduser('~') + '/.config/upm', 'r+') as file:
+			file.seek(0)
+			version = file.readline().splitlines()[0]
+			try:
+				flatpak_enabled = int(file.readline())
+				snapd_enabled = int(file.readline())
+				hold_enabled = int(file.readline())
+				break
+			except:
+				remove(expanduser('~') + '/.config/upm')
 ### defs
 def check():
 	if int(popen('id -u').read()) == 0:
