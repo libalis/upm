@@ -27,6 +27,7 @@ wget https://raw.githubusercontent.com/libalis/upm/main/upm && chmod +x upm && s
 | ------ | ------ |
 | --copyright | -c | none |
 | --help | -h |
+| --reset | -r |
 | --version | -v |
 
 | bash command | abbreviation |
