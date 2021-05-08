@@ -1,9 +1,11 @@
 # upm - Universal Package Manager
 ## Features
 - Uniform commands for pacman, apt, dnf and zypper
+- [ ] Support for Flatpak, Snappy and AppImage
 - Very user-friendly to install and use
 - Expandable and customisable
 - Hardly any dependencies
+- [ ] Auto install and update
 
 ## Tech
 - [GNU bash 5](https://www.gnu.org/software/bash/)
@@ -36,7 +38,7 @@ sudo mv upm /bin/
 ```sh
 upm install gimp audacity # Install packages
 upm update # Update the system
-upm -help # Get help
+upm --help # Get help
 ```
 
 ## License
