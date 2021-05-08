@@ -1,11 +1,17 @@
-# upm - Universal Package Manager
+# upm - Universal Package Manager 0.0.2
 ## Features
-- Uniform commands for pacman, apt, dnf and zypper
-- [ ] Support for Flatpak, Snappy and AppImage
-- Very user-friendly to install and use
-- Expandable and customisable
+- Traditional package managers, flatpak and snapd are freely combinable
+- Uniform commands for pacman, apt, dnf, zypper, flatpak and snapd
+- Very user-friendly and hassle-free to install and use
+- Powerful, expandable and customisable
 - Hardly any dependencies
-- [ ] Auto install and update
+- Self-propelling
+
+## To-do
+Support for:
+- [x] Flatpak
+- [x] Snapd
+- [ ] AppImage
 
 ## Tech
 - [GNU bash 5](https://www.gnu.org/software/bash/)
@@ -13,9 +19,7 @@
 
 ## Installation
 ```sh
-wget https://raw.githubusercontent.com/libalis/upm/main/upm
-chmod +x upm
-sudo mv upm /bin/
+wget https://raw.githubusercontent.com/libalis/upm/main/upm && chmod +x upm && sudo mv upm /bin/
 ```
 
 ## Usage
@@ -24,6 +28,12 @@ sudo mv upm /bin/
 | --copyright | -c | none |
 | --help | -h |
 | --version | -v |
+
+| bash command | abbreviation |
+| ------ | ------ |
+| --traditional | -t |
+| --flatpak | -f |
+| --snapd | -s |
 
 | upm command | abbreviation | parameter(s) |
 | ------ | ------ | ------ |
@@ -36,8 +46,14 @@ sudo mv upm /bin/
 
 ## Examples
 ```sh
-upm install gimp audacity # Install packages
+upm search -t -f audacity ffmpeg # Search packages only from flatpak and snapd
+```
+
+```sh
 upm update # Update the system
+```
+
+```sh
 upm --help # Get help
 ```
 
