@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 from os import popen, system
 from sys import argv
+
+flatpak_enabled=1
+snapd_enabled=1
+
 def help():
 	print(popen('echo $SHELL').read().splitlines()[0].split('/')[-1] + ':')
 	print('\t--copyright\t-c')
@@ -70,6 +74,20 @@ try:
 			system(check() + 'bash /tmp/upm && ' + check() + 'zypper clean')
 		else:
 			pass
+		if flatpak_enabled == 1:
+			system(check() + 'flatpak remove --unused')
+		else:
+			pass
+		if snapd_enabled == 1:
+			with open('/tmp/upm', 'a') as file:
+				file.write("snap list --all | awk '/disabled/{print $1, $3}' |\n")
+				file.write('\twhile read snapname revision; do\n')
+				file.write('\t\tsnap remove "$snapname" --revision="$revision"\n')
+				file.write('\tdone\n')
+				file.write('rm -rf /tmp/upm\n')
+			system(check() + 'bash /tmp/upm')
+		else:
+			pass
 	elif argv[1] == 'info':
 		if popen('grep -e arch /etc/*-release').read() != '':
 			system(check() + 'pacman -Si ' + tmp())
@@ -79,6 +97,14 @@ try:
 			system(check() + 'dnf info ' + tmp())
 		elif popen('grep -e opensuse /etc/*-release').read() != '':
 			system(check() + 'zypper info ' + tmp())
+		else:
+			pass
+		if flatpak_enabled == 1:
+			system(check() + 'flatpak remote-info flathub ' + tmp())
+		else:
+			pass
+		if snapd_enabled == 1:
+			system(check() + 'snap info ' + tmp())
 		else:
 			pass
 	elif argv[1] == 'install' or argv[1] == 'in':
@@ -92,6 +118,14 @@ try:
 			system(check() + 'zypper install ' + tmp())
 		else:
 			pass
+		if flatpak_enabled == 1:
+			system(check() + 'flatpak install ' + tmp())
+		else:
+			pass
+		if snapd_enabled == 1:
+			system(check() + "snap install " + tmp())
+		else:
+			pass
 	elif argv[1] == 'remove' or argv[1] == 'rm':
 		if popen('grep -e arch /etc/*-release').read() != '':
 			system(check() + 'pacman -Rscn ' + tmp())
@@ -101,6 +135,16 @@ try:
 			system(check() + 'dnf remove ' + tmp())
 		elif popen('grep -e opensuse /etc/*-release').read() != '':
 			system(check() + 'zypper remove --clean-deps ' + tmp())
+		else:
+			pass
+		if flatpak_enabled == 1:
+			system(check() + 'flatpak remove --delete-data ' + tmp())
+		else:
+			pass
+		if snapd_enabled == 1:
+			system(check() + 'snap remove --purge ' + tmp())
+			for x in range(2,len(argv)):
+				system(check() + 'rm -rf ~/snap/' + argv[x])
 		else:
 			pass
 	elif argv[1] == 'search' or argv[1] == 'se':
@@ -114,6 +158,14 @@ try:
 			system(check() + 'zypper search ' + tmp())
 		else:
 			pass
+		if flatpak_enabled == 1:
+			system(check() + 'flatpak search ' + tmp())
+		else:
+			pass
+		if snapd_enabled == 1:
+			system(check() + 'snap search ' + tmp())
+		else:
+			pass
 	elif argv[1] == 'update' or argv[1] == 'up':
 		if popen('grep -e arch /etc/*-release').read() != '':
 			system(check() + 'pacman -Syyu')
@@ -125,6 +177,15 @@ try:
 			system(check() + 'zypper refresh --force && ' + check() + 'zypper dist-upgrade')
 		else:
 			pass
+		if flatpak_enabled == 1:
+			system(check() + 'flatpak update')
+		else:
+			pass
+		if snapd_enabled == 1:
+			system(check() + 'snap refresh')
+		else:
+			pass
+		system('wget https://raw.githubusercontent.com/libalis/upm/main/upm && chmod +x upm && ' + check() + 'mv upm /bin/')
 	else:
 		help()
 except IndexError:
