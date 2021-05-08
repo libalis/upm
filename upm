@@ -1,0 +1,133 @@
+#!/usr/bin/env python3
+from os import popen, system
+from sys import argv
+def help():
+	print(popen('echo $SHELL').read().splitlines()[0].split('/')[-1] + ':')
+	print('\t--copyright\t-c')
+	print('\t--help\t\t-h')
+	print('\t--version\t-v')
+	print('upm:')
+	print('\tautoremove')
+	print('\tinfo')
+	print('\tinstall\t\tin')
+	print('\tremove\t\trm')
+	print('\tsearch\t\tse')
+	print('\tupdate\t\tup')
+def check():
+	if int(popen('id -u').read()) == 0:
+		return ''
+	else:
+		return 'sudo '
+def tmp():
+	tmp = ''
+	for x in range(2,len(argv)-1):
+		tmp = tmp + argv[x] + ' '
+	tmp = tmp + argv[len(argv)-1]
+	return tmp
+try:
+	if argv[1] == '--copyright' or argv[1] == '-c':
+		print('MIT License')
+		print()
+		print('Copyright (c) 2021 Robert Kagan')
+		print()
+		print('Permission is hereby granted, free of charge, to any person obtaining a copy')
+		print('of this software and associated documentation files (the "Software"), to deal')
+		print('in the Software without restriction, including without limitation the rights')
+		print('to use, copy, modify, merge, publish, distribute, sublicense, and/or sell')
+		print('copies of the Software, and to permit persons to whom the Software is')
+		print('furnished to do so, subject to the following conditions:')
+		print()
+		print('The above copyright notice and this permission notice shall be included in all')
+		print('copies or substantial portions of the Software.')
+		print()
+		print('THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR')
+		print('IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,')
+		print('FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE')
+		print('AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER')
+		print('LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,')
+		print('OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE')
+		print('SOFTWARE.')
+	elif argv[1] == '--help' or argv[1] == '-h':
+		help()
+	elif argv[1] == '--version' or argv[1] == '-v':
+		print('upm 0.0.1 (' + popen('uname -m').read().splitlines()[0] + ')')
+	elif argv[1] == 'autoremove':
+		if popen('grep -e arch /etc/*-release').read() != '':
+			with open('/tmp/upm', 'a') as file:
+				file.write('pacman -Rscn $(pacman -Qdtq)\n')
+				file.write('rm -rf /tmp/upm\n')
+			system(check() + 'bash /tmp/upm && ' + check() + 'pacman -Scc')
+		elif popen('grep -e debian -e ubuntu /etc/*-release').read() != '':
+			system(check() + 'apt autoremove --purge && ' + check() + 'apt clean')
+		elif popen('grep -e fedora /etc/*-release').read() != '':
+			system(check() + 'dnf autoremove && ' + check() + 'dnf clean all')
+		elif popen('grep -e opensuse /etc/*-release').read() != '':
+			with open('/tmp/upm', 'a') as file:
+				file.write("zypper packages --unneeded | awk -F'|' 'NR==0 || NR==1 || NR==2 || NR==3 || NR==4 {next} {print $3}' > /tmp/zyp\n")
+				file.write('while read p; do sudo zypper -n rm "$p"; done < /tmp/zyp\n')
+				file.write('rm -rf /tmp/zyp\n')
+				file.write('rm -rf /tmp/upm\n')
+			system(check() + 'bash /tmp/upm && ' + check() + 'zypper clean')
+		else:
+			pass
+	elif argv[1] == 'info':
+		if popen('grep -e arch /etc/*-release').read() != '':
+			system(check() + 'pacman -Si ' + tmp())
+		elif popen('grep -e debian -e ubuntu /etc/*-release').read() != '':
+			system(check() + 'apt info ' + tmp())
+		elif popen('grep -e fedora /etc/*-release').read() != '':
+			system(check() + 'dnf info ' + tmp())
+		elif popen('grep -e opensuse /etc/*-release').read() != '':
+			system(check() + 'zypper info ' + tmp())
+		else:
+			pass
+	elif argv[1] == 'install' or argv[1] == 'in':
+		if popen('grep -e arch /etc/*-release').read() != '':
+			system(check() + 'pacman -S ' + tmp())
+		elif popen('grep -e debian -e ubuntu /etc/*-release').read() != '':
+			system(check() + 'apt install ' + tmp())
+		elif popen('grep -e fedora /etc/*-release').read() != '':
+			system(check() + 'dnf install ' + tmp())
+		elif popen('grep -e opensuse /etc/*-release').read() != '':
+			system(check() + 'zypper install ' + tmp())
+		else:
+			pass
+	elif argv[1] == 'remove' or argv[1] == 'rm':
+		if popen('grep -e arch /etc/*-release').read() != '':
+			system(check() + 'pacman -Rscn ' + tmp())
+		elif popen('grep -e debian -e ubuntu /etc/*-release').read() != '':
+			system(check() + 'apt purge ' + tmp())
+		elif popen('grep -e fedora /etc/*-release').read() != '':
+			system(check() + 'dnf remove ' + tmp())
+		elif popen('grep -e opensuse /etc/*-release').read() != '':
+			system(check() + 'zypper remove --clean-deps ' + tmp())
+		else:
+			pass
+	elif argv[1] == 'search' or argv[1] == 'se':
+		if popen('grep -e arch /etc/*-release').read() != '':
+			system(check() + 'pacman -Ss ' + tmp())
+		elif popen('grep -e debian -e ubuntu /etc/*-release').read() != '':
+			system(check() + 'apt search ' + tmp())
+		elif popen('grep -e fedora /etc/*-release').read() != '':
+			system(check() + 'dnf search ' + tmp())
+		elif popen('grep -e opensuse /etc/*-release').read() != '':
+			system(check() + 'zypper search ' + tmp())
+		else:
+			pass
+	elif argv[1] == 'update' or argv[1] == 'up':
+		if popen('grep -e arch /etc/*-release').read() != '':
+			system(check() + 'pacman -Syyu')
+		elif popen('grep -e debian -e ubuntu /etc/*-release').read() != '':
+			system(check() + 'apt update && ' + check() + 'apt full-upgrade')
+		elif popen('grep -e fedora /etc/*-release').read() != '':
+			system(check() + 'dnf upgrade --refresh')
+		elif popen('grep -e opensuse /etc/*-release').read() != '':
+			system(check() + 'zypper refresh --force && ' + check() + 'zypper dist-upgrade')
+		else:
+			pass
+	else:
+		help()
+except IndexError:
+	help()
+except error:
+	print(error)
