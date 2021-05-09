@@ -319,6 +319,11 @@ if '--version' in argv or '-v' in argv:
 	exit()
 else:
 	pass
+for x in range(1,len(argv)):
+	if 'update' in argv[x] or 'up' in argv[x]:
+		upm('update')
+	else:
+		pass
 if '--traditional' not in argv and '-t' not in argv and '--flatpak' not in argv and '-f' not in argv and '--snapd' not in argv and '-s' not in argv:
 	if 'autoremove' in argv:
 		if traditional_enabled == 1:
@@ -452,7 +457,6 @@ if '--traditional' not in argv and '-t' not in argv and '--flatpak' not in argv 
 				pass
 		else:
 			pass
-		upm('update')
 	else:
 		pass
 else:
@@ -470,7 +474,6 @@ if '--traditional' in argv or '-t' in argv:
 		traditional('search')
 	elif 'update' in argv or 'up' in argv:
 		traditional('update')
-		upm('update')
 	else:
 		pass
 else:
@@ -488,7 +491,6 @@ if '--flatpak' in argv or '-f' in argv:
 		flatpak('search')
 	elif 'update' in argv or 'up' in argv:
 		flatpak('update')
-		upm('update')
 	else:
 		pass
 else:
@@ -506,7 +508,6 @@ if '--snapd' in argv or '-s' in argv:
 		snapd('search')
 	elif 'update' in argv or 'up' in argv:
 		snapd('update')
-		upm('update')
 	else:
 		pass
 else:
