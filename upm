@@ -6,9 +6,9 @@ from sys import argv
 version = '0.0.3'
 db_cmds = ['--copyright', '-c', '--help', '-h', '--reset', '-r', '--version', '-v', '--traditional', '-t', '--flatpak', '-f', '--snapd', '-s', 'autoremove', 'info', 'install', 'in', 'remove', 'rm', 'search', 'se', 'update', 'up']
 db_params = [None] * len(db_cmds)
-for x in range(0,len(db_cmds)):
+for x in range(len(db_cmds)):
 	if '-' in db_cmds[x]:
-		for y in range(0,len(db_params)):
+		for y in range(len(db_params)):
 			if db_params[y] == None:
 				db_params[y] = db_cmds[x]
 				break
@@ -197,7 +197,7 @@ def check():
 	else:
 		return 'sudo '
 def check_no_params(tmp):
-	for x in range(0,len(tmp)):
+	for x in range(len(tmp)):
 		if tmp[x] in argv:
 			for y in range(1,len(argv)):
 				if argv[y] not in db_params and argv[y] != tmp[x]:
@@ -206,7 +206,7 @@ def check_no_params(tmp):
 				else:
 					pass
 def check_params(tmp):
-	for x in range(0,len(tmp)):
+	for x in range(len(tmp)):
 		if tmp[x] in argv:
 			result = False
 			for y in range(1,len(argv)):
@@ -245,7 +245,7 @@ def params():
 			pass
 	return tmp
 ### start
-while 1:
+while True:
 	try:
 		open(expanduser('~') + '/.config/upm', 'r')
 	except:
