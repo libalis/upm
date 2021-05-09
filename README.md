@@ -1,4 +1,4 @@
-# upm - Universal Package Manager 0.0.2
+# upm - Universal Package Manager 0.0.3
 ## Features
 - Traditional package managers, flatpak and snapd are freely combinable
 - Uniform commands for pacman, apt, dnf, zypper, flatpak and snapd
