@@ -245,17 +245,20 @@ def params():
 			pass
 	return tmp
 ### start
-try:
-	open(expanduser('~') + '/.config/upm', 'r+')
-except:
-	open(expanduser('~') + '/.config/upm', 'a')
 while 1:
-	with open(expanduser('~') + '/.config/upm', 'r+') as file:
+	try:
+		open(expanduser('~') + '/.config/upm', 'r')
+	except:
+		open(expanduser('~') + '/.config/upm', 'a')
+	with open(expanduser('~') + '/.config/upm', 'r') as file:
 		if file.readline() != version + '\n':
 			remove(expanduser('~') + '/.config/upm')
-			open(expanduser('~') + '/.config/upm', 'a')
-			with open(expanduser('~') + '/.config/upm', 'r+') as file:
+			with open(expanduser('~') + '/.config/upm', 'a') as file:
 				file.write(version + '\n')
+				tmp = input('traditional_enabled=(0/1): ')
+				while tmp != '0' and tmp != '1':
+					tmp = input('traditional_enabled=(0/1): ')
+				file.write(tmp + '\n')
 				tmp = input('flatpak_enabled=(0/1): ')
 				while tmp != '0' and tmp != '1':
 					tmp = input('flatpak_enabled=(0/1): ')
@@ -270,10 +273,11 @@ while 1:
 				file.write(tmp + '\n')
 		else:
 			pass
-		with open(expanduser('~') + '/.config/upm', 'r+') as file:
+		with open(expanduser('~') + '/.config/upm', 'r') as file:
 			file.seek(0)
 			version = file.readline().splitlines()[0]
 			try:
+				traditional_enabled = int(file.readline())
 				flatpak_enabled = int(file.readline())
 				snapd_enabled = int(file.readline())
 				hold_enabled = int(file.readline())
@@ -312,7 +316,10 @@ else:
 	pass
 if '--traditional' not in argv and '-t' not in argv and '--flatpak' not in argv and '-f' not in argv and '--snapd' not in argv and '-s' not in argv:
 	if 'autoremove' in argv:
-		traditional('autoremove')
+		if traditional_enabled == 1:
+			traditional('autoremove')
+		else:
+			pass
 		if flatpak_enabled == 1:
 			msg(0)
 			flatpak('autoremove')
@@ -324,7 +331,10 @@ if '--traditional' not in argv and '-t' not in argv and '--flatpak' not in argv 
 		else:
 			pass
 	elif 'info' in argv:
-		traditional('info')
+		if traditional_enabled == 1:
+			traditional('info')
+		else:
+			pass
 		if flatpak_enabled == 1:
 			msg(0)
 			flatpak('info')
@@ -336,7 +346,10 @@ if '--traditional' not in argv and '-t' not in argv and '--flatpak' not in argv 
 		else:
 			pass
 	elif 'install' in argv or 'in' in argv:
-		traditional('install')
+		if traditional_enabled == 1:
+			traditional('install')
+		else:
+			pass
 		if flatpak_enabled == 1:
 			msg(0)
 			flatpak('install')
@@ -348,7 +361,10 @@ if '--traditional' not in argv and '-t' not in argv and '--flatpak' not in argv 
 		else:
 			pass
 	elif 'remove' in argv or 'rm' in argv:
-		traditional('remove')
+		if traditional_enabled == 1:
+			traditional('remove')
+		else:
+			pass
 		if flatpak_enabled == 1:
 			msg(0)
 			flatpak('remove')
@@ -360,7 +376,10 @@ if '--traditional' not in argv and '-t' not in argv and '--flatpak' not in argv 
 		else:
 			pass
 	elif 'search' in argv or 'se' in argv:
-		traditional('search')
+		if traditional_enabled == 1:
+			traditional('search')
+		else:
+			pass
 		if flatpak_enabled == 1:
 			msg(0)
 			flatpak('search')
@@ -372,7 +391,10 @@ if '--traditional' not in argv and '-t' not in argv and '--flatpak' not in argv 
 		else:
 			pass
 	elif 'update' in argv or 'up' in argv:
-		traditional('update')
+		if traditional_enabled == 1:
+			traditional('update')
+		else:
+			pass
 		if flatpak_enabled == 1:
 			msg(0)
 			flatpak('update')
