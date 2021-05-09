@@ -1,4 +1,4 @@
-# upm - Universal Package Manager 0.0.3
+# upm - Universal Package Manager 0.0.4
 ## Features
 - Traditional package managers, flatpak and snapd are freely combinable
 - Uniform commands for pacman, apt, dnf, zypper, flatpak and snapd
@@ -17,14 +17,14 @@ wget https://raw.githubusercontent.com/libalis/upm/main/upm && chmod +x upm && s
 ```
 
 ## Usage
-| bash command | abbreviation |
+| shell command | abbreviation |
 | ------ | ------ |
 | --copyright | -c | none |
 | --help | -h |
 | --reset | -r |
 | --version | -v |
 
-| bash command | abbreviation |
+| shell command | abbreviation |
 | ------ | ------ |
 | --traditional | -t |
 | --flatpak | -f |
