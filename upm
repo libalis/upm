@@ -3,7 +3,7 @@ from os import popen, remove, system
 from os.path import expanduser
 from sys import argv
 ### vars
-version = '0.0.3'
+version = '0.0.4'
 db_cmds = ['--copyright', '-c', '--help', '-h', '--reset', '-r', '--version', '-v', '--traditional', '-t', '--flatpak', '-f', '--snapd', '-s', 'autoremove', 'info', 'install', 'in', 'remove', 'rm', 'search', 'se', 'update', 'up']
 db_params = [None] * len(db_cmds)
 for x in range(len(db_cmds)):
@@ -66,7 +66,7 @@ def bash(tmp):
 ### upm
 def upm(tmp):
 	if tmp == 'update':
-		system('wget https://raw.githubusercontent.com/libalis/upm/main/upm && chmod +x upm && ' + check() + 'mv upm /bin/')
+		system('wget https://raw.githubusercontent.com/libalis/upm/main/upm && chmod +x upm && ' + check_root() + 'mv upm /bin/')
 	else:
 		pass
 ### traditional
@@ -76,73 +76,73 @@ def traditional(tmp):
 			with open('/tmp/upm', 'a') as file:
 				file.write('pacman -Rscn $(pacman -Qdtq)\n')
 				file.write('rm -rf /tmp/upm\n')
-			system(check() + 'bash /tmp/upm && ' + check() + 'pacman -Scc')
+			system(check_root() + 'bash /tmp/upm && ' + check_root() + 'pacman -Scc')
 		elif popen('grep -e debian -e ubuntu /etc/*-release').read() != '':
-			system(check() + 'apt autoremove --purge && ' + check() + 'apt clean')
+			system(check_root() + 'apt autoremove --purge && ' + check_root() + 'apt clean')
 		elif popen('grep -e fedora /etc/*-release').read() != '':
-			system(check() + 'dnf autoremove && ' + check() + 'dnf clean all')
+			system(check_root() + 'dnf autoremove && ' + check_root() + 'dnf clean all')
 		elif popen('grep -e opensuse /etc/*-release').read() != '':
 			with open('/tmp/upm', 'a') as file:
 				file.write("zypper packages --unneeded | awk -F'|' 'NR==0 || NR==1 || NR==2 || NR==3 || NR==4 {next} {print $3}' > /tmp/zyp\n")
-				file.write('while read p; do sudo zypper remove --clean-deps "$p"; done < /tmp/zyp\n')
+				file.write('while read p; do zypper remove --clean-deps "$p"; done < /tmp/zyp\n')
 				file.write('rm -rf /tmp/zyp\n')
 				file.write('rm -rf /tmp/upm\n')
-			system(check() + 'bash /tmp/upm && ' + check() + 'zypper clean')
+			system(check_root() + 'bash /tmp/upm && ' + check_root() + 'zypper clean')
 		else:
 			pass
 	elif tmp == 'info':
 		if popen('grep -e arch /etc/*-release').read() != '':
-			system(check() + 'pacman -Si ' + params())
+			system(check_root() + 'pacman -Si ' + check_params())
 		elif popen('grep -e debian -e ubuntu /etc/*-release').read() != '':
-			system(check() + 'apt info ' + params())
+			system(check_root() + 'apt info ' + check_params())
 		elif popen('grep -e fedora /etc/*-release').read() != '':
-			system(check() + 'dnf info ' + params())
+			system(check_root() + 'dnf info ' + check_params())
 		elif popen('grep -e opensuse /etc/*-release').read() != '':
-			system(check() + 'zypper info ' + params())
+			system(check_root() + 'zypper info ' + check_params())
 		else:
 			pass
 	elif tmp == 'install':
 		if popen('grep -e arch /etc/*-release').read() != '':
-			system(check() + 'pacman -S ' + params())
+			system(check_root() + 'pacman -S ' + check_params())
 		elif popen('grep -e debian -e ubuntu /etc/*-release').read() != '':
-			system(check() + 'apt install ' + params())
+			system(check_root() + 'apt install ' + check_params())
 		elif popen('grep -e fedora /etc/*-release').read() != '':
-			system(check() + 'dnf install ' + params())
+			system(check_root() + 'dnf install ' + check_params())
 		elif popen('grep -e opensuse /etc/*-release').read() != '':
-			system(check() + 'zypper install ' + params())
+			system(check_root() + 'zypper install ' + check_params())
 		else:
 			pass
 	elif tmp == 'remove':
 		if popen('grep -e arch /etc/*-release').read() != '':
-			system(check() + 'pacman -Rscn ' + params())
+			system(check_root() + 'pacman -Rscn ' + check_params())
 		elif popen('grep -e debian -e ubuntu /etc/*-release').read() != '':
-			system(check() + 'apt purge ' + params())
+			system(check_root() + 'apt purge ' + check_params())
 		elif popen('grep -e fedora /etc/*-release').read() != '':
-			system(check() + 'dnf remove ' + params())
+			system(check_root() + 'dnf remove ' + check_params())
 		elif popen('grep -e opensuse /etc/*-release').read() != '':
-			system(check() + 'zypper remove --clean-deps ' + params())
+			system(check_root() + 'zypper remove --clean-deps ' + check_params())
 		else:
 			pass
 	elif tmp == 'search':
 		if popen('grep -e arch /etc/*-release').read() != '':
-			system(check() + 'pacman -Ss ' + params())
+			system(check_root() + 'pacman -Ss ' + check_params())
 		elif popen('grep -e debian -e ubuntu /etc/*-release').read() != '':
-			system(check() + 'apt search ' + params())
+			system(check_root() + 'apt search ' + check_params())
 		elif popen('grep -e fedora /etc/*-release').read() != '':
-			system(check() + 'dnf search ' + params())
+			system(check_root() + 'dnf search ' + check_params())
 		elif popen('grep -e opensuse /etc/*-release').read() != '':
-			system(check() + 'zypper search ' + params())
+			system(check_root() + 'zypper search ' + check_params())
 		else:
 			pass
 	elif tmp == 'update':
 		if popen('grep -e arch /etc/*-release').read() != '':
-			system(check() + 'pacman -Syyu')
+			system(check_root() + 'pacman -Syyu')
 		elif popen('grep -e debian -e ubuntu /etc/*-release').read() != '':
-			system(check() + 'apt update && ' + check() + 'apt full-upgrade')
+			system(check_root() + 'apt update && ' + check_root() + 'apt full-upgrade')
 		elif popen('grep -e fedora /etc/*-release').read() != '':
-			system(check() + 'dnf upgrade --refresh')
+			system(check_root() + 'dnf upgrade --refresh')
 		elif popen('grep -e opensuse /etc/*-release').read() != '':
-			system(check() + 'zypper refresh --force && ' + check() + 'zypper dist-upgrade')
+			system(check_root() + 'zypper refresh --force && ' + check_root() + 'zypper dist-upgrade')
 		else:
 			pass
 	else:
@@ -150,17 +150,17 @@ def traditional(tmp):
 ### flatpak
 def flatpak(tmp):
 	if tmp == 'autoremove':
-		system(check() + 'flatpak remove --delete-data --unused')
+		system(check_root() + 'flatpak remove --delete-data --unused')
 	elif tmp == 'info':
-		system(check() + 'flatpak remote-info flathub ' + params())
+		system(check_root() + 'flatpak remote-info flathub ' + check_params())
 	elif tmp == 'install':
-		system(check() + 'flatpak install ' + params())
+		system(check_root() + 'flatpak install ' + check_params())
 	elif tmp == 'remove':
-		system(check() + 'flatpak remove --delete-data ' + params())
+		system(check_root() + 'flatpak remove --delete-data ' + check_params())
 	elif tmp == 'search':
-		system(check() + 'flatpak search ' + params())
+		system(check_root() + 'flatpak search ' + check_params())
 	elif tmp == 'update':
-		system(check() + 'flatpak update')
+		system(check_root() + 'flatpak update')
 	else:
 		pass
 ### snapd
@@ -172,30 +172,25 @@ def snapd(tmp):
 			file.write('\t\tsnap remove --purge "$snapname" --revision="$revision"\n')
 			file.write('\tdone\n')
 			file.write('rm -rf /tmp/upm\n')
-		system(check() + 'bash /tmp/upm')
+		system(check_root() + 'bash /tmp/upm')
 	elif tmp == 'info':
-		system(check() + 'snap info ' + params())
+		system(check_root() + 'snap info ' + check_params())
 	elif tmp == 'install':
-		system(check() + "snap install " + params())
+		system(check_root() + "snap install " + check_params())
 	elif tmp == 'remove':
-		system(check() + 'snap remove --purge ' + params())
+		system(check_root() + 'snap remove --purge ' + check_params())
 		for x in range(1,len(argv)):
 			if argv[x] not in db_cmds:
-				system(check() + 'rm -rf ~/snap/' + argv[x])
+				system(check_root() + 'rm -rf ~/snap/' + argv[x])
 			else:
 				pass
 	elif tmp == 'search':
-		system(check() + 'snap search ' + params())
+		system(check_root() + 'snap search ' + check_params())
 	elif tmp == 'update':
-		system(check() + 'snap refresh')
+		system(check_root() + 'snap refresh')
 	else:
 		pass
-### defs
-def check():
-	if int(popen('id -u').read()) == 0:
-		return ''
-	else:
-		return 'sudo '
+### checks
 def check_no_params(tmp):
 	for x in range(len(tmp)):
 		if tmp[x] in argv:
@@ -205,7 +200,44 @@ def check_no_params(tmp):
 					exit()
 				else:
 					pass
-def check_params(tmp):
+def check_params():
+	tmp = ''
+	for x in range(1,len(argv)):
+		if(argv[x] not in db_cmds):
+			if tmp == '':
+				tmp = argv[x]
+			else:
+				tmp = tmp + ' ' + argv[x]
+		else:
+			pass
+	return tmp
+def check_root():
+	if int(popen('id -u').read()) == 0:
+		return ''
+	else:
+		return 'sudo '
+def check_skip(tmp):
+	if hold_enabled == 1:
+		if tmp == 0:
+			if input('press s to skip traditional; press enter to continue ') == 's':
+				return True
+			else:
+				return False
+		elif tmp == 1:
+			if input('press s to skip flatpak; press enter to continue ') == 's':
+				return True
+			else:
+				return False
+		elif tmp == 2:
+			if input('press s to skip snapd; press enter to continue ') == 's':
+				return True
+			else:
+				return False
+		else:
+			pass
+	else:
+		pass
+def check_yes_params(tmp):
 	for x in range(len(tmp)):
 		if tmp[x] in argv:
 			result = False
@@ -222,28 +254,6 @@ def check_params(tmp):
 				pass
 		else:
 			pass
-def msg(tmp):
-	if hold_enabled == 1:
-		print()
-		if tmp == 0:
-			input('press ctrl+c to cancel before flatpak; press enter to continue')
-		elif tmp == 1:
-			input('press ctrl+c to cancel before snapd; press enter to continue')
-		else:
-			pass
-	else:
-		pass
-def params():
-	tmp = ''
-	for x in range(1,len(argv)):
-		if(argv[x] not in db_cmds):
-			if tmp == '':
-				tmp = argv[x]
-			else:
-				tmp = tmp + ' ' + argv[x]
-		else:
-			pass
-	return tmp
 ### start
 while True:
 	try:
@@ -295,7 +305,7 @@ for x in range(1,len(argv)):
 	else:
 		pass
 check_no_params(['autoremove', 'update', 'up'])
-check_params(['info', 'install', 'in', 'remove', 'rm', 'search', 'se'])
+check_yes_params(['info', 'install', 'in', 'remove', 'rm', 'search', 'se'])
 if '--copyright' in argv or '-c' in argv:
 	bash('copyright')
 	exit()
@@ -317,98 +327,139 @@ else:
 if '--traditional' not in argv and '-t' not in argv and '--flatpak' not in argv and '-f' not in argv and '--snapd' not in argv and '-s' not in argv:
 	if 'autoremove' in argv:
 		if traditional_enabled == 1:
-			traditional('autoremove')
+			if check_skip(0) == False:
+				traditional('autoremove')
+			else:
+				pass
 		else:
 			pass
 		if flatpak_enabled == 1:
-			msg(0)
-			flatpak('autoremove')
+			if check_skip(1) == False:
+				flatpak('autoremove')
+			else:
+				pass
 		else:
 			pass
 		if snapd_enabled == 1:
-			msg(1)
-			snapd('autoremove')
+			if check_skip(2) == False:
+				snapd('autoremove')
+			else:
+				pass
 		else:
 			pass
 	elif 'info' in argv:
 		if traditional_enabled == 1:
-			traditional('info')
+			if check_skip(0) == False:
+				traditional('info')
+			else:
+				pass
 		else:
 			pass
 		if flatpak_enabled == 1:
-			msg(0)
-			flatpak('info')
+			if check_skip(1) == False:
+				flatpak('info')
+			else:
+				pass
 		else:
 			pass
 		if snapd_enabled == 1:
-			msg(1)
-			snapd('info')
+			if check_skip(2) == False:
+				snapd('info')
+			else:
+				pass
 		else:
 			pass
 	elif 'install' in argv or 'in' in argv:
 		if traditional_enabled == 1:
-			traditional('install')
+			if check_skip(0) == False:
+				traditional('install')
+			else:
+				pass
 		else:
 			pass
 		if flatpak_enabled == 1:
-			msg(0)
-			flatpak('install')
+			if check_skip(1) == False:
+				flatpak('install')
+			else:
+				pass
 		else:
 			pass
 		if snapd_enabled == 1:
-			msg(1)
-			snapd('install')
+			if check_skip(2) == False:
+				snapd('install')
+			else:
+				pass
 		else:
 			pass
 	elif 'remove' in argv or 'rm' in argv:
 		if traditional_enabled == 1:
-			traditional('remove')
+			if check_skip(0) == False:
+				traditional('remove')
+			else:
+				pass
 		else:
 			pass
 		if flatpak_enabled == 1:
-			msg(0)
-			flatpak('remove')
+			if check_skip(1) == False:
+				flatpak('remove')
+			else:
+				pass
 		else:
 			pass
 		if snapd_enabled == 1:
-			msg(1)
-			snapd('remove')
+			if check_skip(2) == False:
+				snapd('remove')
+			else:
+				pass
 		else:
 			pass
 	elif 'search' in argv or 'se' in argv:
 		if traditional_enabled == 1:
-			traditional('search')
+			if check_skip(0) == False:
+				traditional('search')
+			else:
+				pass
 		else:
 			pass
 		if flatpak_enabled == 1:
-			msg(0)
-			flatpak('search')
+			if check_skip(1) == False:
+				flatpak('search')
+			else:
+				pass
 		else:
 			pass
 		if snapd_enabled == 1:
-			msg(1)
-			snapd('search')
+			if check_skip(2) == False:
+				snapd('search')
+			else:
+				pass
 		else:
 			pass
 	elif 'update' in argv or 'up' in argv:
 		if traditional_enabled == 1:
-			traditional('update')
+			if check_skip(0) == False:
+				traditional('update')
+			else:
+				pass
 		else:
 			pass
 		if flatpak_enabled == 1:
-			msg(0)
-			flatpak('update')
+			if check_skip(1) == False:
+				flatpak('update')
+			else:
+				pass
 		else:
 			pass
 		if snapd_enabled == 1:
-			msg(1)
-			snapd('update')
+			if check_skip(2) == False:
+				snapd('update')
+			else:
+				pass
 		else:
 			pass
 		upm('update')
 	else:
-		bash('help')
-		exit()
+		pass
 else:
 	pass
 if '--traditional' in argv or '-t' in argv:
@@ -424,6 +475,7 @@ if '--traditional' in argv or '-t' in argv:
 		traditional('search')
 	elif 'update' in argv or 'up' in argv:
 		traditional('update')
+		upm('update')
 	else:
 		pass
 else:
@@ -441,6 +493,7 @@ if '--flatpak' in argv or '-f' in argv:
 		flatpak('search')
 	elif 'update' in argv or 'up' in argv:
 		flatpak('update')
+		upm('update')
 	else:
 		pass
 else:
@@ -458,6 +511,7 @@ if '--snapd' in argv or '-s' in argv:
 		snapd('search')
 	elif 'update' in argv or 'up' in argv:
 		snapd('update')
+		upm('update')
 	else:
 		pass
 else:
