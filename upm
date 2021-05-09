@@ -16,8 +16,8 @@ for x in range(len(db_cmds)):
 				pass
 	else:
 		pass
-### bash
-def bash(tmp):
+### upm
+def upm(tmp):
 	if tmp == 'copyright':
 		print('MIT License')
 		print()
@@ -59,14 +59,10 @@ def bash(tmp):
 		print('\tupdate\t\tup')
 	elif tmp == 'reset':
 		remove(expanduser('~') + '/.config/upm')
+	elif tmp == 'update':
+		system('wget https://raw.githubusercontent.com/libalis/upm/main/upm && chmod +x upm && ' + check_root() + 'mv upm /bin/')
 	elif tmp == 'version':
 		print('upm ' + version + ' (' + popen('uname -m').read().splitlines()[0] + ')')
-	else:
-		pass
-### upm
-def upm(tmp):
-	if tmp == 'update':
-		system('wget https://raw.githubusercontent.com/libalis/upm/main/upm && chmod +x upm && ' + check_root() + 'mv upm /bin/')
 	else:
 		pass
 ### traditional
@@ -196,7 +192,7 @@ def check_no_params(tmp):
 		if tmp[x] in argv:
 			for y in range(1,len(argv)):
 				if argv[y] not in db_params and argv[y] != tmp[x]:
-					bash('help')
+					upm('help')
 					exit()
 				else:
 					pass
@@ -243,7 +239,7 @@ def check_yes_params(tmp):
 				else:
 					pass
 			if result == False:
-				bash('help')
+				upm('help')
 				exit()
 			else:
 				pass
@@ -293,7 +289,7 @@ while True:
 for x in range(1,len(argv)):
 	if '-' in argv[x]:
 		if argv[x] not in db_params:
-			bash('help')
+			upm('help')
 			exit()
 		else:
 			pass
@@ -302,20 +298,20 @@ for x in range(1,len(argv)):
 check_no_params(['autoremove', 'update', 'up'])
 check_yes_params(['info', 'install', 'in', 'remove', 'rm', 'search', 'se'])
 if '--copyright' in argv or '-c' in argv:
-	bash('copyright')
+	upm('copyright')
 	exit()
 else:
 	pass
 if '--help' in argv or '-h' in argv:
-	bash('help')
+	upm('help')
 	exit()
 else:
 	pass
 if '--reset' in argv or '-r' in argv:
-	bash('reset')
+	upm('reset')
 	exit()
 if '--version' in argv or '-v' in argv:
-	bash('version')
+	upm('version')
 	exit()
 else:
 	pass
