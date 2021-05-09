@@ -219,22 +219,17 @@ def check_root():
 def check_skip(tmp):
 	if hold_enabled == 1:
 		if tmp == 0:
-			if input('press s to skip traditional; press enter to continue ') == 's':
-				return True
-			else:
-				return False
+			result = input('Do you want to skip traditional? [y/N]: ')
 		elif tmp == 1:
-			if input('press s to skip flatpak; press enter to continue ') == 's':
-				return True
-			else:
-				return False
+			result = input('Do you want to skip flatpak? [y/N]: ')
 		elif tmp == 2:
-			if input('press s to skip snapd; press enter to continue ') == 's':
-				return True
-			else:
-				return False
+			result = input('Do you want to skip snapd? [y/N]: ')
 		else:
 			pass
+		if result == 'y' or result == 'Y':
+			return True
+		else:
+			return False
 	else:
 		pass
 def check_yes_params(tmp):
