@@ -16,96 +16,6 @@ for x in range(0,len(db_cmds)):
 				pass
 	else:
 		pass
-### start
-try:
-	open(expanduser('~') + '/.config/upm', 'r+')
-except:
-	open(expanduser('~') + '/.config/upm', 'a')
-while 1:
-	with open(expanduser('~') + '/.config/upm', 'r+') as file:
-		if file.readline() != version + '\n':
-			remove(expanduser('~') + '/.config/upm')
-			open(expanduser('~') + '/.config/upm', 'a')
-			with open(expanduser('~') + '/.config/upm', 'r+') as file:
-				file.write(version + '\n')
-				tmp = input('flatpak_enabled=(0/1): ')
-				while tmp != '0' and tmp != '1':
-					tmp = input('flatpak_enabled=(0/1): ')
-				file.write(tmp + '\n')
-				tmp = input('snapd_enabled=(0/1): ')
-				while tmp != '0' and tmp != '1':
-					tmp = input('snapd_enabled=(0/1): ')
-				file.write(tmp + '\n')
-				tmp = input('hold_enabled=(0/1): ')
-				while tmp != '0' and tmp != '1':
-					tmp = input('hold_enabled=(0/1): ')
-				file.write(tmp + '\n')
-		else:
-			pass
-		with open(expanduser('~') + '/.config/upm', 'r+') as file:
-			file.seek(0)
-			version = file.readline().splitlines()[0]
-			try:
-				flatpak_enabled = int(file.readline())
-				snapd_enabled = int(file.readline())
-				hold_enabled = int(file.readline())
-				break
-			except:
-				remove(expanduser('~') + '/.config/upm')
-### defs
-def check():
-	if int(popen('id -u').read()) == 0:
-		return ''
-	else:
-		return 'sudo '
-def check_no_params(tmp):
-	for x in range(0,len(tmp)):
-		if tmp[x] in argv:
-			for y in range(1,len(argv)):
-				if argv[y] not in db_params and argv[y] != tmp[x]:
-					bash('help')
-					exit()
-				else:
-					pass
-def check_params(tmp):
-	for x in range(0,len(tmp)):
-		if tmp[x] in argv:
-			result = False
-			for y in range(1,len(argv)):
-				if argv[y] not in db_params and argv[y] != tmp[x]:
-					result = True
-					break
-				else:
-					pass
-			if result == False:
-				bash('help')
-				exit()
-			else:
-				pass
-		else:
-			pass
-def msg(tmp):
-	if hold_enabled == 1:
-		print()
-		if tmp == 0:
-			input('press ctrl+c to cancel before flatpak; press enter to continue')
-		elif tmp == 1:
-			input('press ctrl+c to cancel before snapd; press enter to continue')
-		else:
-			pass
-	else:
-		pass
-def params():
-	tmp = ''
-	for x in range(1,len(argv)):
-		if(argv[x] not in db_cmds):
-			if tmp == '':
-				tmp = argv[x]
-			else:
-				tmp = tmp + ' ' + argv[x]
-		else:
-			pass
-	return tmp
 ### bash
 def bash(tmp):
 	if tmp == 'copyright':
@@ -280,6 +190,96 @@ def snapd(tmp):
 		system(check() + 'snap refresh')
 	else:
 		pass
+### defs
+def check():
+	if int(popen('id -u').read()) == 0:
+		return ''
+	else:
+		return 'sudo '
+def check_no_params(tmp):
+	for x in range(0,len(tmp)):
+		if tmp[x] in argv:
+			for y in range(1,len(argv)):
+				if argv[y] not in db_params and argv[y] != tmp[x]:
+					bash('help')
+					exit()
+				else:
+					pass
+def check_params(tmp):
+	for x in range(0,len(tmp)):
+		if tmp[x] in argv:
+			result = False
+			for y in range(1,len(argv)):
+				if argv[y] not in db_params and argv[y] != tmp[x]:
+					result = True
+					break
+				else:
+					pass
+			if result == False:
+				bash('help')
+				exit()
+			else:
+				pass
+		else:
+			pass
+def msg(tmp):
+	if hold_enabled == 1:
+		print()
+		if tmp == 0:
+			input('press ctrl+c to cancel before flatpak; press enter to continue')
+		elif tmp == 1:
+			input('press ctrl+c to cancel before snapd; press enter to continue')
+		else:
+			pass
+	else:
+		pass
+def params():
+	tmp = ''
+	for x in range(1,len(argv)):
+		if(argv[x] not in db_cmds):
+			if tmp == '':
+				tmp = argv[x]
+			else:
+				tmp = tmp + ' ' + argv[x]
+		else:
+			pass
+	return tmp
+### start
+try:
+	open(expanduser('~') + '/.config/upm', 'r+')
+except:
+	open(expanduser('~') + '/.config/upm', 'a')
+while 1:
+	with open(expanduser('~') + '/.config/upm', 'r+') as file:
+		if file.readline() != version + '\n':
+			remove(expanduser('~') + '/.config/upm')
+			open(expanduser('~') + '/.config/upm', 'a')
+			with open(expanduser('~') + '/.config/upm', 'r+') as file:
+				file.write(version + '\n')
+				tmp = input('flatpak_enabled=(0/1): ')
+				while tmp != '0' and tmp != '1':
+					tmp = input('flatpak_enabled=(0/1): ')
+				file.write(tmp + '\n')
+				tmp = input('snapd_enabled=(0/1): ')
+				while tmp != '0' and tmp != '1':
+					tmp = input('snapd_enabled=(0/1): ')
+				file.write(tmp + '\n')
+				tmp = input('hold_enabled=(0/1): ')
+				while tmp != '0' and tmp != '1':
+					tmp = input('hold_enabled=(0/1): ')
+				file.write(tmp + '\n')
+		else:
+			pass
+		with open(expanduser('~') + '/.config/upm', 'r+') as file:
+			file.seek(0)
+			version = file.readline().splitlines()[0]
+			try:
+				flatpak_enabled = int(file.readline())
+				snapd_enabled = int(file.readline())
+				hold_enabled = int(file.readline())
+				break
+			except:
+				remove(expanduser('~') + '/.config/upm')
 ### main
 for x in range(1,len(argv)):
 	if '-' in argv[x]:
