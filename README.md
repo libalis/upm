@@ -7,12 +7,6 @@
 - Hardly any dependencies
 - Self-propelling
 
-## To-do
-Support for:
-- [x] Flatpak
-- [x] Snapd
-- [ ] AppImage
-
 ## Tech
 - [GNU bash 5](https://www.gnu.org/software/bash/)
 - [Python 3](https://www.python.org/)
@@ -47,15 +41,15 @@ wget https://raw.githubusercontent.com/libalis/upm/main/upm && chmod +x upm && s
 
 ## Examples
 ```sh
-upm search -t -f audacity ffmpeg # Search packages only from flatpak and snapd
+upm se -t -f audacity ffmpeg # Search packages only from flatpak and snapd
 ```
 
 ```sh
-upm update # Update the system
+upm up # Update the system
 ```
 
 ```sh
-upm --help # Get help
+upm -h # Get help
 ```
 
 ## License
