@@ -3,7 +3,7 @@ from os import popen, remove, system
 from os.path import expanduser
 from sys import argv
 ### vars
-version = '0.0.4'
+version = '0.0.5'
 db_cmds = ['--copyright', '-c', '--help', '-h', '--reset', '-r', '--version', '-v', '--traditional', '-t', '--flatpak', '-f', '--snapd', '-s', 'autoremove', 'info', 'install', 'in', 'remove', 'rm', 'search', 'se', 'update', 'up']
 db_params = [None] * len(db_cmds)
 for x in range(len(db_cmds)):
@@ -60,7 +60,20 @@ def upm(tmp):
 	elif tmp == 'reset':
 		remove(expanduser('~') + '/.config/upm')
 	elif tmp == 'update':
-		system('wget https://raw.githubusercontent.com/libalis/upm/main/upm && chmod +x upm && ' + check_root() + 'mv upm /bin/')
+		check_version = popen('cd /tmp/ && wget https://raw.githubusercontent.com/libalis/upm/main/README.md && cat README.md && rm -rf README.md').read().splitlines()[0].split(' ')[-1]
+		if check_version != version:
+			with open('/tmp/upm', 'a') as file:
+				file.write('cd /tmp/\n')
+				file.write('wget https://github.com/libalis/upm/archive/refs/tags/v' + check_version + '.zip\n')
+				file.write('unzip v' + check_version + '.zip\n')
+				file.write('chmod +x upm-' + check_version + '/upm\n')
+				file.write('sudo mv upm-' + check_version + '/upm /bin/\n')
+				file.write('rm -rf v' + check_version + '.zip\n')
+				file.write('rm -rf upm-' + check_version + '/\n')
+				file.write('rm -rf /tmp/upm\n')
+			system(check_root() + 'bash /tmp/upm')
+		else:
+			pass
 	elif tmp == 'version':
 		print('upm ' + version + ' (' + popen('uname -m').read().splitlines()[0] + ')')
 	else:
@@ -275,7 +288,6 @@ while True:
 		else:
 			pass
 		with open(expanduser('~') + '/.config/upm', 'r') as file:
-			file.seek(0)
 			version = file.readline().splitlines()[0]
 			try:
 				traditional_enabled = int(file.readline())
@@ -286,6 +298,9 @@ while True:
 			except:
 				remove(expanduser('~') + '/.config/upm')
 ### main
+if len(argv) == 1:
+	upm('help')
+	exit()
 for x in range(1,len(argv)):
 	if '-' in argv[x]:
 		if argv[x] not in db_params:
@@ -295,8 +310,6 @@ for x in range(1,len(argv)):
 			pass
 	else:
 		pass
-check_no_params(['autoremove', 'update', 'up'])
-check_yes_params(['info', 'install', 'in', 'remove', 'rm', 'search', 'se'])
 if '--copyright' in argv or '-c' in argv:
 	upm('copyright')
 	exit()
@@ -320,6 +333,8 @@ for x in range(1,len(argv)):
 		upm('update')
 	else:
 		pass
+check_no_params(['autoremove', 'update', 'up'])
+check_yes_params(['info', 'install', 'in', 'remove', 'rm', 'search', 'se'])
 if '--traditional' not in argv and '-t' not in argv and '--flatpak' not in argv and '-f' not in argv and '--snapd' not in argv and '-s' not in argv:
 	if 'autoremove' in argv:
 		if traditional_enabled == 1:
