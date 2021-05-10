@@ -60,7 +60,7 @@ def upm(tmp):
 	elif tmp == 'reset':
 		remove(expanduser('~') + '/.config/upm')
 	elif tmp == 'update':
-		check_version = popen('cd /tmp/ && wget https://raw.githubusercontent.com/libalis/upm/main/README.md && cat README.md && rm -rf README.md').read().splitlines()[0].split(' ')[-1]
+		check_version = popen('cd /tmp/ && wget -q https://raw.githubusercontent.com/libalis/upm/main/README.md && cat README.md && rm -rf README.md').read().splitlines()[0].split(' ')[-1]
 		if check_version != version:
 			with open('/tmp/upm', 'a') as file:
 				file.write('cd /tmp/\n')
