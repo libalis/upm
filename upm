@@ -298,17 +298,15 @@ while True:
 			except:
 				remove(expanduser('~') + '/.config/upm')
 ### main
-tmp = False
 for x in range(1,len(argv)):
-	if argv[x] in db_cmds:
-			tmp = True
+	if '-' in argv[x]:
+		if argv[x] not in db_params:
+			upm('help')
+			exit()
+		else:
+			pass
 	else:
 		pass
-if tmp == False:
-	upm('help')
-	exit()
-else:
-	pass
 if '--copyright' in argv or '-c' in argv:
 	upm('copyright')
 	exit()
@@ -332,6 +330,17 @@ for x in range(1,len(argv)):
 		upm('update')
 	else:
 		pass
+tmp = False
+for x in range(1,len(argv)):
+	if argv[x] in db_cmds:
+			tmp = True
+	else:
+		pass
+if tmp == False:
+	upm('help')
+	exit()
+else:
+	pass
 check_no_params(['autoremove', 'update', 'up'])
 check_yes_params(['info', 'install', 'in', 'remove', 'rm', 'search', 'se'])
 if '--traditional' not in argv and '-t' not in argv and '--flatpak' not in argv and '-f' not in argv and '--snapd' not in argv and '-s' not in argv:
