@@ -298,18 +298,17 @@ while True:
 			except:
 				remove(expanduser('~') + '/.config/upm')
 ### main
-if len(argv) == 1:
-	upm('help')
-	exit()
+tmp = False
 for x in range(1,len(argv)):
-	if '-' in argv[x]:
-		if argv[x] not in db_params:
-			upm('help')
-			exit()
-		else:
-			pass
+	if argv[x] in db_cmds:
+			tmp = True
 	else:
 		pass
+if tmp == False:
+	upm('help')
+	exit()
+else:
+	pass
 if '--copyright' in argv or '-c' in argv:
 	upm('copyright')
 	exit()
