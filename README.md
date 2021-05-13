@@ -18,7 +18,7 @@ wget https://raw.githubusercontent.com/libalis/upm/main/upm && chmod +x upm && s
 
 ## Uninstall
 ```sh
-sudo rm /bin/upm
+sudo rm /bin/upm ~/.config/upm
 ```
 
 ## Usage
