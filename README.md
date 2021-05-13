@@ -16,6 +16,11 @@
 wget https://raw.githubusercontent.com/libalis/upm/main/upm && chmod +x upm && sudo mv upm /bin/
 ```
 
+## Uninstall
+```sh
+sudo rm /bin/upm
+```
+
 ## Usage
 | shell command | abbreviation |
 | ------ | ------ |
