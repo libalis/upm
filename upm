@@ -19,7 +19,10 @@ for x in range(len(db_cmds)):
 ### upm
 def upm(tmp):
 	if tmp == 'autoremove':
-		remove(expanduser('~') + '/.wget-hsts')
+		try:
+			remove(expanduser('~') + '/.wget-hsts')
+		except:
+			pass
 	elif tmp == 'copyright':
 		print('MIT License')
 		print()
