@@ -18,7 +18,9 @@ for x in range(len(db_cmds)):
 		pass
 ### upm
 def upm(tmp):
-	if tmp == 'copyright':
+	if tmp == 'autoremove':
+		remove(expanduser('~') + '/.wget-hsts')
+	elif tmp == 'copyright':
 		print('MIT License')
 		print()
 		print('Copyright (c) 2021 Robert Kagan')
@@ -325,11 +327,6 @@ if '--version' in argv or '-v' in argv:
 	exit()
 else:
 	pass
-for x in range(1,len(argv)):
-	if 'update' in argv[x] or 'up' in argv[x]:
-		upm('update')
-	else:
-		pass
 tmp = False
 for x in range(1,len(argv)):
 	if argv[x] in db_cmds:
@@ -343,6 +340,14 @@ else:
 	pass
 check_no_params(['autoremove', 'update', 'up'])
 check_yes_params(['info', 'install', 'in', 'remove', 'rm', 'search', 'se'])
+if 'autoremove' in argv:
+	upm('autoremove')
+else:
+	pass
+if 'update' in argv or 'up' in argv:
+	upm('update')
+else:
+	pass
 if '--traditional' not in argv and '-t' not in argv and '--flatpak' not in argv and '-f' not in argv and '--snapd' not in argv and '-s' not in argv:
 	if 'autoremove' in argv:
 		if traditional_enabled == 1:
