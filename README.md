@@ -46,7 +46,7 @@ sudo rm /bin/upm ~/.config/upm
 
 ## Examples
 ```sh
-upm se -t -f audacity ffmpeg # Search packages only from flatpak and snapd
+upm se -f -s audacity ffmpeg # Search packages only from flatpak and snapd
 ```
 
 ```sh
