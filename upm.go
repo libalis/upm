@@ -26,17 +26,17 @@ func contains(x []string, y string) int {
 func gets(x []string, y []string) []string {
     index := -1
     for i := 0; i < len(x); i++ {
-        tmp := contains(os.Args, x[i])
+        tmp := contains(removes(os.Args), x[i])
         if tmp != -1 && (index == -1 || tmp < index) {
             index = tmp
         }
     }
-    output := make([]string, len(os.Args) + len(y) - index - 1)
+    output := make([]string, len(removes(os.Args)) + len(y) - index - 1)
     for i := 0; i < len(y); i++ {
         output[i] = y[i]
     }
     for i := len(y); i < len(output); i++ {
-        output[i] = os.Args[index + i - len(y) + 1]
+        output[i] = removes(os.Args)[index + i - len(y) + 1]
     }
     if len(output) != len(y) {
         return output
@@ -62,6 +62,24 @@ func holds(x string) int {
         }
     } else {
         output = 0
+    }
+    return output
+}
+
+func removes(x []string) []string {
+    count := 0
+    for i := 0; i < len(x); i++ {
+        if x[i] == "--traditional" || x[i] == "-t" || x[i] == "--flatpak" || x[i] == "-f" || x[i] == "--snapd" || x[i] == "-s" {
+            count++
+        }
+    }
+    output := make([]string, len(x) - count)
+    i := 0
+    for j := 0; j < len(x); j++ {
+        if x[j] != "--traditional" && x[j] != "-t" && x[j] != "--flatpak" && x[j] != "-f" && x[j] != "--snapd" && x[j] != "-s" {
+            output[i] = x[j]
+            i++
+        }
     }
     return output
 }
