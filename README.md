@@ -1,4 +1,4 @@
-# upm - Universal Package Manager 0.0.5
+# upm - Universal Package Manager 1.0.0
 ## Features
 - Traditional package managers, flatpak and snapd are freely combinable
 - Uniform commands for pacman, apt, dnf, zypper, flatpak and snapd
@@ -8,17 +8,23 @@
 - Self-propelling
 
 ## Tech
-- [GNU bash 5](https://www.gnu.org/software/bash/)
-- [Python 3](https://www.python.org/)
+- [Go](https://go.dev/)
+- [GNU Bash](https://www.gnu.org/software/bash/)
+- [Pacman](https://archlinux.org/pacman/)
+- [APT](https://wiki.debian.org/Apt)
+- [DNF](https://rpm-software-management.github.io/)
+- [Zypper](https://en.opensuse.org/Portal:Libzypp)
+- [Flatpak](https://flatpak.org/)
+- [snapd](https://snapcraft.io/)
 
 ## Installation
 ```sh
-wget https://raw.githubusercontent.com/libalis/upm/main/upm && chmod +x upm && sudo mv upm /bin/
+wget https://raw.githubusercontent.com/libalis/upm/main/upm.go && sudo go build -o /bin/upm upm.go && rm -rf upm.go
 ```
 
 ## Uninstall
 ```sh
-sudo rm /bin/upm ~/.config/upm
+sudo rm -rf /bin/upm ~/.config/upm.xml
 ```
 
 ## Usage
@@ -46,7 +52,7 @@ sudo rm /bin/upm ~/.config/upm
 
 ## Examples
 ```sh
-upm se -f -s audacity ffmpeg # Search packages only from flatpak and snapd
+upm -f se audacity # Search a package only from one source
 ```
 
 ```sh
@@ -58,4 +64,4 @@ upm -h # Get help
 ```
 
 ## License
-MIT
+[MIT](https://raw.githubusercontent.com/libalis/upm/main/LICENSE)
