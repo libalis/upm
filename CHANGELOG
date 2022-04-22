@@ -1,0 +1,50 @@
+[1.0.0]
+Changelog:
+- Change from python to go
+- Complete rewrite from scratch
+- The self updater has been dropped
+- Settings are now saved in xml format
+- Copyright automatically updates the year
+- Version now shows official architecture names
+- First stable version with new numbering scheme
+- Help now shows which commands expect additional parameters
+
+[0.0.5]
+Changelog:
+- Bug fixes
+- Restructured source code
+- Added new upm update algorithm
+- Readded behavior without correct parameters
+- Hide upm update output when no update is available
+
+[0.0.4]
+Changelog:
+- Bug fixes
+- Renamed methods
+- Improved skip query
+- Changed bash to upm
+- Changed cancel to skip
+- Made upm update mandatory
+- Changed upm update execution
+
+[0.0.3]
+Changelog:
+- Bug fixes
+- Renamed method
+- Optimised source code
+- Restructured source code
+- Made source traditional optional
+- Removed the now redundant try-catch
+- Added new variables, new methods, flexibility to snapd remove and checks for typos
+
+[0.0.2]
+Changelog:
+- Corrected typos and bugs
+- Added the ability to reset settings
+- Complete restructuring of the entire source code
+- Increased flexibility thanks to the freely sequencable parameters
+- Addition of the option to select the sources (traditional, flatpak, snapd) individually
+- Autoremove now also deletes the data and dependencies of zypper, flatpak and snapd
+
+[0.0.1]
+First release
