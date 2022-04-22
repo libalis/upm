@@ -1,4 +1,4 @@
-# upm - Universal Package Manager 1.0.0
+# upm - Universal Package Manager 1.1.0
 ## Features
 - Traditional package managers, flatpak and snapd are freely combinable
 - Uniform commands for pacman, apt, dnf, zypper, flatpak and snapd
@@ -22,9 +22,9 @@
 wget https://raw.githubusercontent.com/libalis/upm/main/upm.go && sudo go build -o /bin/upm upm.go && rm -rf upm.go
 ```
 
-## Installation
+## Installation / Update
 ```sh
-wget https://github.com/libalis/upm/releases/download/v1.0.0/upm && chmod +x upm && sudo mv upm /bin/
+wget https://github.com/libalis/upm/releases/download/v1.1.0/upm && chmod +x upm && sudo mv upm /bin/
 ```
 
 ## Uninstall

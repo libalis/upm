@@ -11,7 +11,7 @@ import (
     "time"
 )
 
-var version string = "1.0.0"
+var version string = "1.1.0"
 var traditional, flatpak, snapd, hold string
 
 //

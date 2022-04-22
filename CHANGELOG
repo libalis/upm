@@ -1,3 +1,12 @@
+[1.1.0]
+Changelog:
+- Switch to a database
+- Return of an initial self-updater
+- Improved efficiency and storage requirements
+- Internal changes regarding naming and structure
+- It is now possible to set parameters after the command
+- Extended support for checking against incorrect parameters
+
 [1.0.0]
 Changelog:
 - Change from python to go
