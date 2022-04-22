@@ -12,6 +12,8 @@ import (
 var version string = "1.0.0"
 var traditional, flatpak, snapd, hold string
 
+//
+
 func contains(x []string, y string) int {
     for i, v := range x {
         if v == y {
@@ -19,6 +21,28 @@ func contains(x []string, y string) int {
         }
     }
     return -1
+}
+
+func gets(x []string, y []string) []string {
+    index := -1
+    for i := 0; i < len(x); i++ {
+        tmp := contains(os.Args, x[i])
+        if tmp != -1 && (index == -1 || tmp < index) {
+            index = tmp
+        }
+    }
+    output := make([]string, len(os.Args) + len(y) - index - 1)
+    for i := 0; i < len(y); i++ {
+        output[i] = y[i]
+    }
+    for i := len(y); i < len(output); i++ {
+        output[i] = os.Args[index + i - len(y) + 1]
+    }
+    if len(output) != len(y) {
+        return output
+    } else {
+        return []string{}
+    }
 }
 
 func holds(x string) int {
@@ -42,28 +66,6 @@ func holds(x string) int {
     return output
 }
 
-func params(x []string, y []string) []string {
-    index := -1
-    for i := 0; i < len(x); i++ {
-        tmp := contains(os.Args, x[i])
-        if tmp != -1 && (index == -1 || tmp < index) {
-            index = tmp
-        }
-    }
-    output := make([]string, len(os.Args) + len(y) - index - 1)
-    for i := 0; i < len(y); i++ {
-        output[i] = y[i]
-    }
-    for i := len(y); i < len(output); i++ {
-        output[i] = os.Args[index + i - len(y) + 1]
-    }
-    if len(output) != len(y) {
-        return output
-    } else {
-        return []string{}
-    }
-}
-
 func runs(x []string) {
     command := exec.Command("sudo", x...)
     command.Stdin = os.Stdin
@@ -71,6 +73,8 @@ func runs(x []string) {
     command.Stderr = os.Stderr
     command.Run()
 }
+
+//
 
 func read() {
     home, _:= os.UserHomeDir()
@@ -205,23 +209,7 @@ func write() {
     writer.Flush()
 }
 
-func help() {
-    fmt.Println("--copyright\t-c")
-    fmt.Println("--help\t\t-h")
-    fmt.Println("--reset\t\t-r")
-    fmt.Println("--version\t-v")
-    fmt.Println()
-    fmt.Println("--traditional\t-t")
-    fmt.Println("--flatpak\t-f")
-    fmt.Println("--snapd\t\t-s")
-    fmt.Println()
-    fmt.Println("autoremove")
-    fmt.Println("info\t\t\tpackage(s)")
-    fmt.Println("install\t\tin\tpackage(s)")
-    fmt.Println("remove\t\trm\tpackage(s)")
-    fmt.Println("search\t\tse\tpackage(s)")
-    fmt.Println("update\t\tup")
-}
+//
 
 func copyright() {
     fmt.Println("MIT License")
@@ -247,8 +235,28 @@ func copyright() {
     fmt.Println("SOFTWARE.")
 }
 
+func help() {
+    fmt.Println("--copyright\t-c")
+    fmt.Println("--help\t\t-h")
+    fmt.Println("--reset\t\t-r")
+    fmt.Println("--version\t-v")
+    fmt.Println()
+    fmt.Println("--traditional\t-t")
+    fmt.Println("--flatpak\t-f")
+    fmt.Println("--snapd\t\t-s")
+    fmt.Println()
+    fmt.Println("autoremove")
+    fmt.Println("info\t\t\tpackage(s)")
+    fmt.Println("install\t\tin\tpackage(s)")
+    fmt.Println("remove\t\trm\tpackage(s)")
+    fmt.Println("search\t\tse\tpackage(s)")
+    fmt.Println("update\t\tup")
+}
+
+//
+
 func autoremove() {
-    if len(params([]string{"autoremove"}, []string{})) == 0 {
+    if len(gets([]string{"autoremove"}, []string{})) == 0 {
         if traditional == "true" {
             if holds("traditional") == 0 {
                 if exec.Command("pacman").Run() == nil {
@@ -299,28 +307,28 @@ func autoremove() {
 }
 
 func info() {
-    if len(params([]string{"info"}, []string{})) != 0 {
+    if len(gets([]string{"info"}, []string{})) != 0 {
         if traditional == "true" {
             if holds("traditional") == 0 {
                 if exec.Command("pacman").Run() == nil {
-                    runs(params([]string{"info"}, []string{"pacman", "-Si"}))
+                    runs(gets([]string{"info"}, []string{"pacman", "-Si"}))
                 } else if exec.Command("apt").Run() == nil {
-                    runs(params([]string{"info"}, []string{"apt", "info"}))
+                    runs(gets([]string{"info"}, []string{"apt", "info"}))
                 } else if exec.Command("dnf").Run() == nil {
-                    runs(params([]string{"info"}, []string{"dnf", "info"}))
+                    runs(gets([]string{"info"}, []string{"dnf", "info"}))
                 } else if exec.Command("zypper").Run() == nil {
-                    runs(params([]string{"info"}, []string{"zypper", "info"}))
+                    runs(gets([]string{"info"}, []string{"zypper", "info"}))
                 }
             }
         }
         if flatpak == "true" {
             if holds("flatpak") == 0 {
-                runs(params([]string{"info"}, []string{"flatpak", "info"}))
+                runs(gets([]string{"info"}, []string{"flatpak", "info"}))
             }
         }
         if snapd == "true" {
             if holds("snapd") == 0 {
-                runs(params([]string{"info"}, []string{"snap", "info"}))
+                runs(gets([]string{"info"}, []string{"snap", "info"}))
             }
         }
     } else {
@@ -329,28 +337,28 @@ func info() {
 }
 
 func install() {
-    if len(params([]string{"install", "in"}, []string{})) != 0 {
+    if len(gets([]string{"install", "in"}, []string{})) != 0 {
         if traditional == "true" {
             if holds("traditional") == 0 {
                 if exec.Command("pacman").Run() == nil {
-                    runs(params([]string{"install", "in"}, []string{"pacman", "-S"}))
+                    runs(gets([]string{"install", "in"}, []string{"pacman", "-S"}))
                 } else if exec.Command("apt").Run() == nil {
-                    runs(params([]string{"install", "in"}, []string{"apt", "install"}))
+                    runs(gets([]string{"install", "in"}, []string{"apt", "install"}))
                 } else if exec.Command("dnf").Run() == nil {
-                    runs(params([]string{"install", "in"}, []string{"dnf", "install"}))
+                    runs(gets([]string{"install", "in"}, []string{"dnf", "install"}))
                 } else if exec.Command("zypper").Run() == nil {
-                    runs(params([]string{"install", "in"}, []string{"zypper", "install"}))
+                    runs(gets([]string{"install", "in"}, []string{"zypper", "install"}))
                 }
             }
         }
         if flatpak == "true" {
             if holds("flatpak") == 0 {
-                runs(params([]string{"install", "in"}, []string{"flatpak", "install"}))
+                runs(gets([]string{"install", "in"}, []string{"flatpak", "install"}))
             }
         }
         if snapd == "true" {
             if holds("snapd") == 0 {
-                runs(params([]string{"install", "in"}, []string{"snap", "install"}))
+                runs(gets([]string{"install", "in"}, []string{"snap", "install"}))
             }
         }
     } else {
@@ -359,35 +367,35 @@ func install() {
 }
 
 func remove() {
-    if len(params([]string{"remove", "rm"}, []string{})) != 0 {
+    if len(gets([]string{"remove", "rm"}, []string{})) != 0 {
         if traditional == "true" {
             if holds("traditional") == 0 {
                 if exec.Command("pacman").Run() == nil {
-                    runs(params([]string{"remove", "rm"}, []string{"pacman", "-Rscn"}))
+                    runs(gets([]string{"remove", "rm"}, []string{"pacman", "-Rscn"}))
                 } else if exec.Command("apt").Run() == nil {
-                    runs(params([]string{"remove", "rm"}, []string{"apt", "purge"}))
+                    runs(gets([]string{"remove", "rm"}, []string{"apt", "purge"}))
                 } else if exec.Command("dnf").Run() == nil {
-                    runs(params([]string{"remove", "rm"}, []string{"dnf", "remove"}))
+                    runs(gets([]string{"remove", "rm"}, []string{"dnf", "remove"}))
                 } else if exec.Command("zypper").Run() == nil {
-                    runs(params([]string{"remove", "rm"}, []string{"zypper", "remove", "--clean-deps"}))
+                    runs(gets([]string{"remove", "rm"}, []string{"zypper", "remove", "--clean-deps"}))
                 }
             }
         }
         if flatpak == "true" {
             if holds("flatpak") == 0 {
-                runs(params([]string{"remove", "rm"}, []string{"flatpak", "remove"}))
-                for i := 0; i < len(params([]string{"remove", "rm"}, []string{})); i++ {
+                runs(gets([]string{"remove", "rm"}, []string{"flatpak", "remove"}))
+                for i := 0; i < len(gets([]string{"remove", "rm"}, []string{})); i++ {
                     home, _:= os.UserHomeDir()
-                    runs([]string{"rm", "-rf", home + "/.var/app/" + params([]string{"remove", "rm"}, []string{})[i]})
+                    runs([]string{"rm", "-rf", home + "/.var/app/" + gets([]string{"remove", "rm"}, []string{})[i]})
                 }
             }
         }
         if snapd == "true" {
             if holds("snapd") == 0 {
-                runs(params([]string{"remove", "rm"}, []string{"snap", "remove", "--purge"}))
-                for i := 0; i < len(params([]string{"remove", "rm"}, []string{})); i++ {
+                runs(gets([]string{"remove", "rm"}, []string{"snap", "remove", "--purge"}))
+                for i := 0; i < len(gets([]string{"remove", "rm"}, []string{})); i++ {
                     home, _:= os.UserHomeDir()
-                    runs([]string{"rm", "-rf", home + "/snap/" + params([]string{"remove", "rm"}, []string{})[i]})
+                    runs([]string{"rm", "-rf", home + "/snap/" + gets([]string{"remove", "rm"}, []string{})[i]})
                 }
             }
         }
@@ -397,28 +405,28 @@ func remove() {
 }
 
 func search() {
-    if len(params([]string{"search", "se"}, []string{})) != 0 {
+    if len(gets([]string{"search", "se"}, []string{})) != 0 {
         if traditional == "true" {
             if holds("traditional") == 0 {
                 if exec.Command("pacman").Run() == nil {
-                    runs(params([]string{"search", "se"}, []string{"pacman", "-Ss"}))
+                    runs(gets([]string{"search", "se"}, []string{"pacman", "-Ss"}))
                 } else if exec.Command("apt").Run() == nil {
-                    runs(params([]string{"search", "se"}, []string{"apt", "search"}))
+                    runs(gets([]string{"search", "se"}, []string{"apt", "search"}))
                 } else if exec.Command("dnf").Run() == nil {
-                    runs(params([]string{"search", "se"}, []string{"dnf", "search"}))
+                    runs(gets([]string{"search", "se"}, []string{"dnf", "search"}))
                 } else if exec.Command("zypper").Run() == nil {
-                    runs(params([]string{"search", "se"}, []string{"zypper", "search"}))
+                    runs(gets([]string{"search", "se"}, []string{"zypper", "search"}))
                 }
             }
         }
         if flatpak == "true" {
             if holds("flatpak") == 0 {
-                runs(params([]string{"search", "se"}, []string{"flatpak", "search"}))
+                runs(gets([]string{"search", "se"}, []string{"flatpak", "search"}))
             }
         }
         if snapd == "true" {
             if holds("snapd") == 0 {
-                runs(params([]string{"search", "se"}, []string{"snap", "search"}))
+                runs(gets([]string{"search", "se"}, []string{"snap", "search"}))
             }
         }
     } else {
@@ -427,7 +435,7 @@ func search() {
 }
 
 func update() {
-    if len(params([]string{"update", "up"}, []string{})) == 0 {
+    if len(gets([]string{"update", "up"}, []string{})) == 0 {
         if traditional == "true" {
             if holds("traditional") == 0 {
                 if exec.Command("pacman").Run() == nil {
@@ -457,6 +465,8 @@ func update() {
         help()
     }
 }
+
+//
 
 func main() {
     read()
