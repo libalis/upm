@@ -164,8 +164,8 @@ func read() {
 func write() {
     home, _:= os.UserHomeDir()
     file, _ := os.Create(home + "/.config/upm.xml")
-	defer file.Close()
-	writer := bufio.NewWriter(file)
+    defer file.Close()
+    writer := bufio.NewWriter(file)
     writer.WriteString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
     writer.WriteString("<upm>\n")
     writer.WriteString("\t<version>" + version + "</version>\n")
