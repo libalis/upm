@@ -5,7 +5,7 @@ Changelog:
 - The self updater has been dropped
 - Settings are now saved in xml format
 - Copyright automatically updates the year
-- Version now shows official architecture names
+- Version now shows official architecture name
 - First stable version with new numbering scheme
 - Help now shows which commands expect additional parameters
 
