@@ -135,7 +135,7 @@ func read() {
                 scanner.Scan()
                 if scanner.Text() == "<upm>" {
                     scanner.Scan()
-                    if scanner.Text() == "\t<version>1.0.0</version>" {
+                    if scanner.Text() == "\t<version>" + version + "</version>" {
                         scanner.Scan()
                         if scanner.Text() == "\t<traditional>true</traditional>" {
                             traditional = "true"
