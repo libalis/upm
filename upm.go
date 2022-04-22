@@ -87,14 +87,14 @@ func holds(x string) int {
 func removes(x []string) []string {
     count := 0
     for i := 0; i < len(x); i++ {
-        if x[i] == "--traditional" || x[i] == "-t" || x[i] == "--flatpak" || x[i] == "-f" || x[i] == "--snapd" || x[i] == "-s" {
+        if contains(db[8:14], x[i]) != -1 {
             count++
         }
     }
     output := make([]string, len(x) - count)
     i := 0
     for j := 0; j < len(x); j++ {
-        if x[j] != "--traditional" && x[j] != "-t" && x[j] != "--flatpak" && x[j] != "-f" && x[j] != "--snapd" && x[j] != "-s" {
+        if contains(db[8:14], x[j]) == -1 {
             output[i] = x[j]
             i++
         }
@@ -506,43 +506,43 @@ func update() {
 
 func main() {
     read()
-    if !checks() || counts([]string{"--traditional", "-t"}) > 1 ||  counts([]string{"--flatpak", "-f"}) > 1 ||  counts([]string{"--snapd", "-s"}) > 1 {
+    if !checks() || counts(db[8:10]) > 1 ||  counts(db[10:12]) > 1 ||  counts(db[12:14]) > 1 {
         help()
     } else {
-        if contains(os.Args, "--traditional") != -1 || contains(os.Args, "-t") != -1 || contains(os.Args, "--flatpak") != -1 || contains(os.Args, "-f") != -1 || contains(os.Args, "--snapd") != -1 || contains(os.Args, "-s") != -1 {
+        if counts(db[8:14]) >= 1 {
             traditional = "false"
             flatpak = "false"
             snapd = "false"
             hold = "false"
-            if contains(os.Args, "--traditional") != -1 || contains(os.Args, "-t") != -1 {
+            if counts(db[8:10]) == 1 {
                 traditional = "true"
             }
-            if contains(os.Args, "--flatpak") != -1 || contains(os.Args, "-f") != -1 {
+            if counts(db[10:12]) == 1 {
                 flatpak = "true"
             }
-            if contains(os.Args, "--snapd") != -1 || contains(os.Args, "-s") != -1 {
+            if counts(db[12:14]) == 1 {
                 snapd = "true"
             }
         }
-        if contains(os.Args, "--copyright") != -1 || contains(os.Args, "-c") != -1 {
+        if counts(db[0:2]) == 1 {
             copyright();
-        } else if contains(os.Args, "--help") != -1 || contains(os.Args, "-h") != -1 {
+        } else if counts(db[2:4]) == 1 {
             help()
-        } else if contains(os.Args, "--reset") != -1 || contains(os.Args, "-r") != -1 {
+        } else if counts(db[4:6]) == 1 {
             write()
-        } else if contains(os.Args, "--version") != -1 || contains(os.Args, "-v") != -1 {
+        } else if counts(db[6:8]) == 1 {
             fmt.Println("upm", version, "(" + runtime.GOARCH + ")")
-        } else if contains(os.Args, "autoremove") != -1 {
+        } else if contains(os.Args, db[14]) != -1 {
             autoremove()
-        } else if contains(os.Args, "info") != -1 {
+        } else if contains(os.Args, db[15]) != -1 {
             info()
-        } else if contains(os.Args, "install") != -1 || contains(os.Args, "in") != -1 {
+        } else if counts(db[16:18]) == 1 {
             install()
-        } else if contains(os.Args, "remove") != -1 || contains(os.Args, "rm") != -1 {
+        } else if counts(db[18:20]) == 1 {
             remove()
-        } else if contains(os.Args, "search") != -1 || contains(os.Args, "se") != -1 {
+        } else if counts(db[20:22]) == 1 {
             search()
-        } else if contains(os.Args, "update") != -1 || contains(os.Args, "up") != -1 {
+        } else if counts(db[22:24]) == 1 {
             update()
         } else {
             help()
