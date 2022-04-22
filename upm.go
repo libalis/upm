@@ -262,8 +262,8 @@ func autoremove() {
                     runs([]string{"dnf", "clean", "all"})
                 } else if exec.Command("zypper").Run() == nil {
                     file, _ := os.Create("/tmp/upm.sh")
-	                defer file.Close()
-	                writer := bufio.NewWriter(file)
+                    defer file.Close()
+                    writer := bufio.NewWriter(file)
                     writer.WriteString("zypper packages --unneeded | awk -F'|' 'NR==0 || NR==1 || NR==2 || NR==3 || NR==4 {next} {print $3}' > /tmp/zyp\n")
                     writer.WriteString("while read p; do zypper remove --clean-deps \"$p\"; done < /tmp/zyp\n")
                     writer.WriteString("rm -rf /tmp/zyp\n")
@@ -282,8 +282,8 @@ func autoremove() {
         if snapd == "true" {
             if holds("snapd") == 0 {
                 file, _ := os.Create("/tmp/upm.sh")
-	            defer file.Close()
-	            writer := bufio.NewWriter(file)
+                defer file.Close()
+                writer := bufio.NewWriter(file)
                 writer.WriteString("snap list --all | awk '/disabled/{print $1, $3}' |\n")
                 writer.WriteString("\twhile read snapname revision; do\n")
                 writer.WriteString("\t\tsnap remove --purge \"$snapname\" --revision=\"$revision\"\n")
