@@ -14,6 +14,17 @@ var traditional, flatpak, snapd, hold string
 
 //
 
+var db []string = []string{"--copyright", "-c", "--help", "-h", "--reset", "-r", "--version", "-v", "--traditional", "-t", "--flatpak", "-f", "--snapd", "-s", "autoremove", "info", "install", "in", "remove", "rm", "search", "se", "update", "up"}
+
+func checks() bool {
+    for i := 0; i < len(os.Args); i++ {
+        if os.Args[i][0] == '-' && contains(db, os.Args[i]) == -1 {
+            return false
+        }
+    }
+    return true
+}
+
 func contains(x []string, y string) int {
     for i := 0; i < len(x); i++ {
         if x[i] == y {
@@ -495,7 +506,7 @@ func update() {
 
 func main() {
     read()
-    if counts([]string{"--traditional", "-t"}) > 1 ||  counts([]string{"--flatpak", "-f"}) > 1 ||  counts([]string{"--snapd", "-s"}) > 1 {
+    if !checks() || counts([]string{"--traditional", "-t"}) > 1 ||  counts([]string{"--flatpak", "-f"}) > 1 ||  counts([]string{"--snapd", "-s"}) > 1 {
         help()
     } else {
         if contains(os.Args, "--traditional") != -1 || contains(os.Args, "-t") != -1 || contains(os.Args, "--flatpak") != -1 || contains(os.Args, "-f") != -1 || contains(os.Args, "--snapd") != -1 || contains(os.Args, "-s") != -1 {
