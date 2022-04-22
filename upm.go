@@ -15,12 +15,22 @@ var traditional, flatpak, snapd, hold string
 //
 
 func contains(x []string, y string) int {
-    for i, v := range x {
-        if v == y {
+    for i := 0; i < len(x); i++ {
+        if x[i] == y {
             return i
         }
     }
     return -1
+}
+
+func counts(x []string) int {
+    count := 0
+    for i := 0; i < len(os.Args); i++ {
+        if contains(x, os.Args[i]) != -1 {
+            count++
+        }
+    }
+    return count
 }
 
 func gets(x []string, y []string) []string {
@@ -38,30 +48,27 @@ func gets(x []string, y []string) []string {
     for i := len(y); i < len(output); i++ {
         output[i] = removes(os.Args)[index + i - len(y) + 1]
     }
-    if len(output) != len(y) {
-        return output
-    } else {
+    if len(output) == len(y) {
         return []string{}
+    } else {
+        return output
     }
 }
 
 func holds(x string) int {
-    output := -1
+    output := 0
     if hold == "true" {
         for {
             fmt.Print("Do you want to skip the \"" + x + "\" module? (y/N): ")
             input := ""
             fmt.Scanln(&input)
             if input == "N" || input == "n" || input == "" {
-                output = 0
                 break
             } else if input == "Y" || input == "y" {
                 output = 1
                 break
             }
         }
-    } else {
-        output = 0
     }
     return output
 }
@@ -488,42 +495,46 @@ func update() {
 
 func main() {
     read()
-    if contains(os.Args, "--traditional") != -1 || contains(os.Args, "-t") != -1 || contains(os.Args, "--flatpak") != -1 || contains(os.Args, "-f") != -1 || contains(os.Args, "--snapd") != -1 || contains(os.Args, "-s") != -1 {
-        traditional = "false"
-        flatpak = "false"
-        snapd = "false"
-        hold = "false"
-        if contains(os.Args, "--traditional") != -1 || contains(os.Args, "-t") != -1 {
-            traditional = "true"
-        }
-        if contains(os.Args, "--flatpak") != -1 || contains(os.Args, "-f") != -1 {
-            flatpak = "true"
-        }
-        if contains(os.Args, "--snapd") != -1 || contains(os.Args, "-s") != -1 {
-            snapd = "true"
-        }
-    }
-    if contains(os.Args, "--copyright") != -1 || contains(os.Args, "-c") != -1 {
-        copyright();
-    } else if contains(os.Args, "--help") != -1 || contains(os.Args, "-h") != -1 {
+    if counts([]string{"--traditional", "-t"}) > 1 ||  counts([]string{"--flatpak", "-f"}) > 1 ||  counts([]string{"--snapd", "-s"}) > 1 {
         help()
-    } else if contains(os.Args, "--reset") != -1 || contains(os.Args, "-r") != -1 {
-        write()
-    } else if contains(os.Args, "--version") != -1 || contains(os.Args, "-v") != -1 {
-        fmt.Println("upm", version, "(" + runtime.GOARCH + ")")
-    } else if contains(os.Args, "autoremove") != -1 {
-        autoremove()
-    } else if contains(os.Args, "info") != -1 {
-        info()
-    } else if contains(os.Args, "install") != -1 || contains(os.Args, "in") != -1 {
-        install()
-    } else if contains(os.Args, "remove") != -1 || contains(os.Args, "rm") != -1 {
-        remove()
-    } else if contains(os.Args, "search") != -1 || contains(os.Args, "se") != -1 {
-        search()
-    } else if contains(os.Args, "update") != -1 || contains(os.Args, "up") != -1 {
-        update()
     } else {
-        help()
+        if contains(os.Args, "--traditional") != -1 || contains(os.Args, "-t") != -1 || contains(os.Args, "--flatpak") != -1 || contains(os.Args, "-f") != -1 || contains(os.Args, "--snapd") != -1 || contains(os.Args, "-s") != -1 {
+            traditional = "false"
+            flatpak = "false"
+            snapd = "false"
+            hold = "false"
+            if contains(os.Args, "--traditional") != -1 || contains(os.Args, "-t") != -1 {
+                traditional = "true"
+            }
+            if contains(os.Args, "--flatpak") != -1 || contains(os.Args, "-f") != -1 {
+                flatpak = "true"
+            }
+            if contains(os.Args, "--snapd") != -1 || contains(os.Args, "-s") != -1 {
+                snapd = "true"
+            }
+        }
+        if contains(os.Args, "--copyright") != -1 || contains(os.Args, "-c") != -1 {
+            copyright();
+        } else if contains(os.Args, "--help") != -1 || contains(os.Args, "-h") != -1 {
+            help()
+        } else if contains(os.Args, "--reset") != -1 || contains(os.Args, "-r") != -1 {
+            write()
+        } else if contains(os.Args, "--version") != -1 || contains(os.Args, "-v") != -1 {
+            fmt.Println("upm", version, "(" + runtime.GOARCH + ")")
+        } else if contains(os.Args, "autoremove") != -1 {
+            autoremove()
+        } else if contains(os.Args, "info") != -1 {
+            info()
+        } else if contains(os.Args, "install") != -1 || contains(os.Args, "in") != -1 {
+            install()
+        } else if contains(os.Args, "remove") != -1 || contains(os.Args, "rm") != -1 {
+            remove()
+        } else if contains(os.Args, "search") != -1 || contains(os.Args, "se") != -1 {
+            search()
+        } else if contains(os.Args, "update") != -1 || contains(os.Args, "up") != -1 {
+            update()
+        } else {
+            help()
+        }
     }
 }
