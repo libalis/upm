@@ -202,7 +202,7 @@ func write() {
     }
     writer.WriteString("\t<hold>" + hold + "</hold>\n")
     writer.WriteString("</upm>\n")
-	writer.Flush()
+    writer.Flush()
 }
 
 func help() {
