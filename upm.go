@@ -3,6 +3,8 @@ package main
 import (
     "bufio"
     "fmt"
+    "io"
+    "net/http"
     "os"
     "os/exec"
     "runtime"
@@ -471,6 +473,15 @@ func search() {
 }
 
 func update() {
+    file, e := http.Get("https://raw.githubusercontent.com/libalis/upm/main/VERSION")
+    if e == nil {
+        reader, _ := io.ReadAll(file.Body)
+        if version != string(reader)[0 : len(reader) - 1] {
+            fmt.Println("\nA new update is available for upm (https://github.com/libalis/upm)\n")
+            hold = "true"
+        }
+    }
+    defer file.Body.Close()
     if len(gets([]string{"update", "up"}, []string{})) == 0 {
         if traditional == "true" {
             if holds("traditional") == 0 {
